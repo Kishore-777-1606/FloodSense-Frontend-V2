@@ -1,0 +1,52 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #1f2937;
+    color: #ffffff;
+    border-bottom: 1px solid #374151;
+  }
+  
+  /* Left */
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  /* Center */
+  .header-center {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .header-item {
+    display: flex;
+    gap: 6px;
+    font-size: 14px;
+  }
+  
+  .header-item span {
+    opacity: 0.7;
+  }
+  
+  .divider {
+    width: 1px;
+    height: 16px;
+    background-color: #4b5563;
+  }
+  
+  /* High risk highlight */
+  .high-risk {
+    color: #ef4444;
+    font-weight: 600;
+  }
+  
+  /* Right */
+  .header-right {
+    display: flex;
+    gap: 6px;
+    font-size: 13px;
+    opacity: 0.85;
+  }

@@ -1,0 +1,180 @@
+/* =====================================================
+   Emergency Alerts Center CSS
+   ===================================================== */
+
+.alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 100%);
+  color: #fff;
+  padding: 10px 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.alert-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.86rem;
+}
+
+.alert-banner-icon {
+  animation: pulse-icon 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-icon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.alert-banner-time {
+  font-size: 0.78rem;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.alerts-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 18px;
+  align-items: start;
+}
+
+.alerts-filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.alerts-filter-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--fs-border);
+  background: #fff;
+  color: var(--fs-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+
+.alerts-filter-btn.active {
+  background: var(--fs-blue);
+  color: #fff;
+  border-color: var(--fs-blue);
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-card {
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-left: 4px solid #ef4444;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: box-shadow 0.15s;
+}
+
+.alert-card:hover {
+  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.alert-card.acknowledged {
+  opacity: 0.6;
+  border-left-color: #22c55e;
+}
+
+.alert-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.alert-card-msg {
+  font-size: 0.84rem;
+  color: #334155;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.alert-ack-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(239,68,68,0.25);
+  background: #fef2f2;
+  color: #ef4444;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.alert-ack-btn:hover {
+  background: #fee2e2;
+}
+
+.alert-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fs-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.alert-view-btn:hover {
+  text-decoration: underline;
+}
+
+/* Channel row */
+.channel-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 9px;
+}
+
+.channel-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.channel-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .alerts-grid {
+    grid-template-columns: 1fr;
+  }
+}

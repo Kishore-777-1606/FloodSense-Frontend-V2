@@ -1,0 +1,111 @@
+/* =====================================================
+   Reports & Intelligence Center CSS
+   ===================================================== */
+
+.reports-exec-card {
+  /* uses fs-card */
+}
+
+.reports-exec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.reports-exec-body p {
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.7;
+}
+
+.reports-exec-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 9px 14px;
+  background: #fff7ed;
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #92400e;
+}
+
+.reports-charts-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 16px;
+}
+
+.reports-chart-card {
+  /* uses fs-card */
+}
+
+.reports-pie-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reports-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--fs-border);
+  background: #f8fafc;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.reports-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 9px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 100;
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.reports-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 9px 14px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--fs-text);
+  font-family: 'Inter', sans-serif;
+  transition: background 0.1s;
+}
+
+.reports-dropdown-item:hover,
+.reports-dropdown-item.active {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+.reports-sort-select {
+  padding: 6px 10px;
+  border: 1px solid var(--fs-border);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--fs-text);
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .reports-charts-row {
+    grid-template-columns: 1fr;
+  }
+}

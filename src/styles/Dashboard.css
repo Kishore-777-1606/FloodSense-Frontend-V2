@@ -1,0 +1,83 @@
+/* =====================================================
+   Dashboard — specific layout styles
+   ===================================================== */
+
+.dashboard-exec-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff7ed;
+  border-left: 4px solid #f97316;
+  border-bottom: 1px solid rgba(249,115,22,0.15);
+  padding: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.exec-icon {
+  color: #f97316;
+  flex-shrink: 0;
+}
+
+.exec-text {
+  flex: 1;
+  font-size: 0.84rem;
+  color: #78350f;
+  line-height: 1.5;
+  min-width: 200px;
+}
+
+.exec-action-btn {
+  background: #f97316;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+
+.exec-action-btn:hover {
+  background: #ea6c04;
+}
+
+.dashboard-map-section {
+  display: flex;
+  gap: 18px;
+  padding: 18px 24px 20px;
+  flex: 1;
+}
+
+.dashboard-map-col {
+  flex: 2.2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dashboard-map-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.dashboard-panel-col {
+  flex: 1;
+  min-width: 240px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-map-section {
+    flex-direction: column;
+    padding: 14px 16px 20px;
+  }
+}

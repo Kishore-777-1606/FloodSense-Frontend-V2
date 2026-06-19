@@ -1,0 +1,514 @@
+/* =====================================================
+   FloodSense — Shared Design Tokens & Sidebar CSS
+   ===================================================== */
+
+:root {
+  --fs-navy: #0d1b2e;
+  --fs-navy-2: #0f2744;
+  --fs-blue: #1e88e5;
+  --fs-blue-dark: #1565c0;
+  --fs-blue-light: rgba(30,136,229,0.13);
+  --fs-surface: #f0f4f8;
+  --fs-white: #ffffff;
+  --fs-border: rgba(226,232,240,0.7);
+  --fs-text: #111827;
+  --fs-muted: #64748b;
+  --fs-high: #ef4444;
+  --fs-high-bg: #fef2f2;
+  --fs-medium: #f97316;
+  --fs-medium-bg: #fff7ed;
+  --fs-low: #22c55e;
+  --fs-low-bg: #f0fdf4;
+  --fs-card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --fs-card-radius: 14px;
+  --sidebar-width: 220px;
+}
+
+/* ===================== SHARED SIDEBAR ===================== */
+.fs-sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: linear-gradient(180deg, #0d1b2e 0%, #0a1933 100%);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.fs-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 18px 18px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-decoration: none;
+}
+
+.fs-sidebar-logo {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(30,136,229,0.35);
+}
+
+.fs-sidebar-brand-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.fs-sidebar-brand-sub {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fs-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 10px;
+  flex: 1;
+}
+
+.fs-sidebar-section-label {
+  font-size: 0.67rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px 4px;
+  margin-top: 6px;
+}
+
+.fs-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.58);
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-align: left;
+  width: 100%;
+  position: relative;
+}
+
+.fs-nav-item:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.88);
+}
+
+.fs-nav-item.active {
+  background: rgba(30,136,229,0.22);
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.fs-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  background: #1e88e5;
+  border-radius: 0 3px 3px 0;
+}
+
+.fs-sidebar-footer {
+  margin: 10px 12px 18px;
+  background: rgba(30,136,229,0.1);
+  border: 1px solid rgba(30,136,229,0.2);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fs-sidebar-footer-icon {
+  color: #60a5fa;
+  margin-bottom: 6px;
+}
+
+.fs-sidebar-footer-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.fs-sidebar-footer-sub {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.4;
+}
+
+/* ===================== SHARED PAGE LAYOUT ===================== */
+.fs-page-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--fs-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.fs-page-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* ===================== SHARED PAGE HEADER ===================== */
+.fs-page-header {
+  background: #fff;
+  border-bottom: 1px solid var(--fs-border);
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.fs-page-header-left h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0d1b2e;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.fs-page-header-left p {
+  font-size: 0.8rem;
+  color: var(--fs-muted);
+  margin: 2px 0 0;
+}
+
+.fs-page-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fs-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 9px;
+  font-size: 0.8rem;
+  color: var(--fs-muted);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.fs-header-badge strong {
+  color: var(--fs-text);
+  font-weight: 600;
+}
+
+.fs-header-badge.high {
+  background: var(--fs-high-bg);
+  border-color: rgba(239,68,68,0.2);
+  color: var(--fs-high);
+}
+
+/* ===================== SHARED CARDS ===================== */
+.fs-card {
+  background: #fff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 20px 22px;
+}
+
+.fs-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+  margin-bottom: 12px;
+}
+
+/* ===================== SHARED KPI ROW ===================== */
+.fs-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 20px 24px 0;
+}
+
+.fs-kpi-card {
+  background: #fff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.fs-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.fs-kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fs-kpi-icon.red { background: var(--fs-high-bg); color: var(--fs-high); }
+.fs-kpi-icon.orange { background: var(--fs-medium-bg); color: var(--fs-medium); }
+.fs-kpi-icon.green { background: var(--fs-low-bg); color: var(--fs-low); }
+.fs-kpi-icon.blue { background: rgba(30,136,229,0.08); color: var(--fs-blue); }
+.fs-kpi-icon.purple { background: rgba(139,92,246,0.08); color: #8b5cf6; }
+
+.fs-kpi-body { flex: 1; min-width: 0; }
+
+.fs-kpi-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fs-muted);
+  margin-bottom: 3px;
+}
+
+.fs-kpi-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.fs-kpi-value.red { color: var(--fs-high); }
+.fs-kpi-value.orange { color: var(--fs-medium); }
+.fs-kpi-value.green { color: var(--fs-low); }
+.fs-kpi-value.blue { color: var(--fs-blue); }
+.fs-kpi-value.purple { color: #8b5cf6; }
+
+.fs-kpi-sub {
+  font-size: 0.72rem;
+  color: var(--fs-muted);
+}
+
+/* ===================== SHARED CONTENT AREA ===================== */
+.fs-content {
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===================== SHARED TABLE ===================== */
+.fs-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--fs-border);
+}
+
+.fs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.fs-table thead th {
+  background: #f8fafc;
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 0.71rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fs-muted);
+  border-bottom: 1px solid var(--fs-border);
+  white-space: nowrap;
+}
+
+.fs-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.12s;
+}
+
+.fs-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.fs-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.fs-table tbody td {
+  padding: 11px 14px;
+  color: var(--fs-text);
+  vertical-align: middle;
+}
+
+/* ===================== RISK BADGES ===================== */
+.fs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fs-badge.high { background: var(--fs-high-bg); color: var(--fs-high); }
+.fs-badge.medium { background: var(--fs-medium-bg); color: var(--fs-medium); }
+.fs-badge.low { background: var(--fs-low-bg); color: var(--fs-low); }
+.fs-badge.critical { background: #1e1e2e; color: #f87171; }
+.fs-badge.blue { background: rgba(30,136,229,0.1); color: var(--fs-blue); }
+
+/* ===================== BUTTONS ===================== */
+.fs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 9px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+.fs-btn.primary {
+  background: var(--fs-blue);
+  color: #fff;
+}
+
+.fs-btn.primary:hover {
+  background: var(--fs-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30,136,229,0.3);
+}
+
+.fs-btn.secondary {
+  background: #fff;
+  color: var(--fs-text);
+  border: 1px solid var(--fs-border);
+}
+
+.fs-btn.secondary:hover {
+  background: #f8fafc;
+}
+
+.fs-btn.danger {
+  background: var(--fs-high-bg);
+  color: var(--fs-high);
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* ===================== LOADING STATES ===================== */
+.fs-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 16px;
+  background: var(--fs-surface);
+}
+
+.fs-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(30,136,229,0.15);
+  border-top-color: var(--fs-blue);
+  border-radius: 50%;
+  animation: fs-spin 0.8s linear infinite;
+}
+
+@keyframes fs-spin {
+  to { transform: rotate(360deg); }
+}
+
+.fs-loading-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fs-muted);
+}
+
+/* ===================== EMPTY STATES ===================== */
+.fs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--fs-muted);
+}
+
+.fs-empty-icon {
+  opacity: 0.35;
+  margin-bottom: 4px;
+}
+
+.fs-empty h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fs-text);
+}
+
+.fs-empty p {
+  font-size: 0.85rem;
+  max-width: 320px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+  .fs-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .fs-sidebar { display: none; }
+}
+
+@media (max-width: 600px) {
+  .fs-kpi-row { grid-template-columns: 1fr; }
+  .fs-page-header { padding: 14px 16px; }
+  .fs-content { padding: 14px 16px 24px; }
+}
