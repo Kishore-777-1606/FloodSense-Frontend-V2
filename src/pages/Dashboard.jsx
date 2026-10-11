@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   Shield,
-  BarChart2,
   MapPin,
   RefreshCw,
   CloudRain,
@@ -11,10 +10,11 @@ import {
   Activity,
 } from "lucide-react";
 
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import MapView from "../components/MapView";
 import SidePanel from "../components/SidePanel";
 import Footer from "../components/Footer";
+import { getRiskData } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Dashboard.css";
 
@@ -29,11 +29,13 @@ export default function Dashboard() {
   const fetchData = () => {
     setLoading(true);
     setError(false);
-    fetch("https://floodsense-backend-working.onrender.com/get-risk?rainfall=250")
-      .then((res) => res.json())
+    getRiskData()
       .then((apiData) => {
         setData(apiData);
-        setRainfall(apiData[0]?.rainfall || 0);
+        const avgRain = apiData.length
+          ? Math.round(apiData.reduce((s, w) => s + (w.rainfall || 0), 0) / apiData.length)
+          : (apiData[0]?.rainfall || 0);
+        setRainfall(avgRain);
         setLastUpdated(new Date());
         localStorage.setItem("riskData", JSON.stringify(apiData));
         setLoading(false);
@@ -44,12 +46,34 @@ export default function Dashboard() {
       });
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    let active = true;
+    getRiskData()
+      .then((apiData) => {
+        if (!active) return;
+        setData(apiData);
+        const avgRain = apiData.length
+          ? Math.round(apiData.reduce((s, w) => s + (w.rainfall || 0), 0) / apiData.length)
+          : (apiData[0]?.rainfall || 0);
+        setRainfall(avgRain);
+        setLastUpdated(new Date());
+        localStorage.setItem("riskData", JSON.stringify(apiData));
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setError(true);
+        setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   if (loading) {
     return (
       <div className="fs-page-layout">
-        <Sidebar />
+        <Navbar />
         <div className="fs-loading">
           <div className="fs-spinner" />
           <div className="fs-loading-text">Loading flood risk data…</div>
@@ -64,7 +88,7 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="fs-page-layout">
-        <Sidebar />
+        <Navbar />
         <div className="fs-loading">
           <AlertTriangle size={48} color="#ef4444" />
           <div className="fs-loading-text">Failed to load data</div>
@@ -102,7 +126,7 @@ export default function Dashboard() {
 
   return (
     <div className="fs-page-layout">
-      <Sidebar />
+      <Navbar />
 
       <div className="fs-page-main">
         {/* HEADER */}
@@ -114,7 +138,7 @@ export default function Dashboard() {
           <div className="fs-page-header-right">
             <div className="fs-header-badge">
               <CloudRain size={14} />
-              <span>Rainfall:</span>
+              <span>Avg Rainfall:</span>
               <strong>{rainfall} mm</strong>
             </div>
             <div className="fs-header-badge" style={{

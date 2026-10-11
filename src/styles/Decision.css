@@ -1,11 +1,11 @@
 /* =====================================================
-   Decision Support — content-specific styles
+   Decision Support — Evidence-Based Advisory Styles
    ===================================================== */
 
 /* Lower grid */
 .decision-lower-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.35fr 1fr;
   gap: 16px;
   align-items: start;
 }
@@ -17,7 +17,7 @@
   gap: 14px;
 }
 
-/* Table header (reused in Alerts/Reports too) */
+/* Table header */
 .decision-table-header {
   display: flex;
   align-items: center;
@@ -29,124 +29,134 @@
   gap: 8px;
 }
 
-/* Action items */
-.decision-action-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid var(--fs-border);
-  transition: background 0.15s;
-}
-
-.decision-action-item--red { border-left: 3px solid #ef4444; }
-.decision-action-item--orange { border-left: 3px solid #f97316; }
-.decision-action-item--blue { border-left: 3px solid #1e88e5; }
-.decision-action-item--green { border-left: 3px solid #22c55e; }
-
-.decision-action-icon {
-  width: 38px;
-  height: 38px;
+/* =====================================================
+   Evidence-Based Advisory Action Cards
+   ===================================================== */
+.decision-action-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1e88e5;
   border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.decision-action-icon--red { background: #fef2f2; color: #ef4444; }
-.decision-action-icon--orange { background: #fff7ed; color: #f97316; }
-.decision-action-icon--blue { background: rgba(30,136,229,0.1); color: #1e88e5; }
-.decision-action-icon--green { background: #f0fdf4; color: #22c55e; }
-
-.decision-action-body { flex: 1; min-width: 0; }
-
-.decision-action-name {
-  font-size: 0.86rem;
-  font-weight: 700;
-  color: #0d1b2e;
-  margin-bottom: 5px;
-}
-
-.decision-action-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 
-.decision-action-bullets li {
-  font-size: 0.78rem;
-  color: #64748b;
-  padding-left: 14px;
-  position: relative;
+.decision-action-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.decision-action-bullets li::before {
-  content: '›';
-  position: absolute;
-  left: 0;
-  color: #94a3b8;
+.action-priority-chip {
+  font-size: 0.68rem;
   font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid;
+  letter-spacing: 0.03em;
 }
 
-/* Resource summary */
+.action-category-code {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.decision-action-headline {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Triggering Evidence Box */
+.action-evidence-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.action-evidence-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.evidence-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.evidence-pill {
+  font-size: 0.72rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.decision-action-rationale {
+  font-size: 0.78rem;
+  color: #334155;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.decision-action-note {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* =====================================================
+   Protocol Summary Items (Replaces Mock Resource Items)
+   ===================================================== */
 .decision-resource-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.decision-resource-item {
+.protocol-summary-item {
   background: #f8fafc;
-  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   padding: 12px;
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.decision-resource-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.decision-resource-icon--blue { background: rgba(30,136,229,0.1); color: #1e88e5; }
-.decision-resource-icon--orange { background: #fff7ed; color: #f97316; }
-.decision-resource-icon--teal { background: rgba(6,182,212,0.1); color: #06b6d4; }
-.decision-resource-icon--green { background: #f0fdf4; color: #22c55e; }
-
-.decision-resource-body {
-  display: flex;
   flex-direction: column;
-  min-width: 0;
 }
 
-.decision-resource-count {
-  font-size: 1.4rem;
+.protocol-count {
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #0d1b2e;
   line-height: 1;
 }
 
-.decision-resource-label {
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: #64748b;
+.protocol-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 4px;
 }
 
-.decision-resource-unit {
-  font-size: 0.7rem;
+.protocol-sub {
+  font-size: 0.68rem;
   color: #94a3b8;
+  margin-top: 2px;
 }
 
 @media (max-width: 1024px) {

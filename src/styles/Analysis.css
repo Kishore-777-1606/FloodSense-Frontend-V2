@@ -1,5 +1,5 @@
 /* =====================================================
-   Analysis Page — content-specific styles
+   Analysis Page — Explainability & Evidence-Based Styles
    ===================================================== */
 
 /* Row layouts */
@@ -9,20 +9,18 @@
 }
 
 .analysis-row-top {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.25fr 1fr;
 }
 
 .analysis-row-mid {
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: 1.35fr 1fr;
 }
 
 .analysis-row-bottom {
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
 }
 
 /* Ward Overview Card */
-.ward-overview-card {}
-
 .ward-overview-header {
   display: flex;
   align-items: flex-start;
@@ -56,35 +54,52 @@
   margin: 2px 0 0;
 }
 
-.risk-score-block {
-  background: #f8fafc;
-  border-radius: 10px;
-  padding: 12px 16px;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
+/* Score Comparison Grid */
+.score-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 10px;
   margin-bottom: 14px;
 }
 
-.risk-score-label {
-  font-size: 0.76rem;
-  font-weight: 600;
+.score-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.score-box-label {
+  font-size: 0.7rem;
+  font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
 }
 
-.risk-score-value {
-  font-size: 2.2rem;
+.score-box-val {
+  font-size: 1.45rem;
   font-weight: 800;
-  line-height: 1;
+  color: #0d1b2e;
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
 }
 
-.risk-score-max {
-  font-size: 1rem;
+.score-unit {
+  font-size: 0.8rem;
   font-weight: 500;
   color: #94a3b8;
+}
+
+.score-box-sub {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  margin-top: 4px;
 }
 
 /* Detail rows */
@@ -123,8 +138,6 @@
 }
 
 /* Map card */
-.ward-map-card {}
-
 .ward-map-container {
   height: 280px;
   border-radius: 10px;
@@ -132,25 +145,40 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Risk Breakdown */
-.risk-breakdown-card {}
+/* =====================================================
+   TreeSHAP Feature Attribution Cards
+   ===================================================== */
+.treeshap-card {
+  padding: 20px;
+}
 
-.risk-bar-item {
+.treeshap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
   margin-bottom: 16px;
 }
 
-.risk-bar-header {
+.shap-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shap-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
 }
 
-.risk-bar-icon {
+.shap-icon {
   width: 36px;
   height: 36px;
-  border-radius: 9px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,212 +189,305 @@
 .elev-icon-bg { background: rgba(139,92,246,0.1); color: #8b5cf6; }
 .water-icon-bg { background: rgba(6,182,212,0.1); color: #06b6d4; }
 
-.risk-bar-info {
-  flex: 1;
-  min-width: 0;
+.shap-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.risk-bar-title {
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #0d1b2e;
+.shap-feature-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.shap-input-val {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.shap-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.shap-points {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.shap-unit {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.shap-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  border: 1px solid;
+  margin-left: auto;
+}
+
+.shap-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+  line-height: 1.4;
   margin: 0;
 }
 
-.risk-bar-desc {
-  font-size: 0.74rem;
-  color: #94a3b8;
-  margin: 2px 0 0;
-}
-
-.risk-bar-score-wrap {
+/* Additivity Formula Equation Box */
+.additivity-formula-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px 16px;
   display: flex;
-  align-items: baseline;
-  gap: 2px;
-  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
-.risk-bar-score {
-  font-size: 1.25rem;
+.formula-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.formula-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.formula-val {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #0d1b2e;
+}
+
+.formula-op {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.reconstructed-item .formula-val {
+  color: #1e88e5;
   font-weight: 800;
 }
 
-.risk-bar-max {
-  font-size: 0.8rem;
-  color: #94a3b8;
-}
-
-.risk-bar-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 20px;
-  border: 1px solid;
-  flex-shrink: 0;
-}
-
-.risk-bar-track {
-  height: 7px;
-  background: #f1f5f9;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.risk-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.6s ease;
-}
-
-/* Risk Summary */
-.risk-summary-card {}
-
-.risk-summary-main {
+.disclaimer-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+/* =====================================================
+   Time-Aware Momentum Tranches & Metrics
+   ===================================================== */
+.tranches-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
   margin-bottom: 14px;
 }
 
-.risk-summary-icon-wrap {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  border: 1.5px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.risk-summary-title {
-  font-size: 0.88rem;
-  color: #1e293b;
-  margin: 0 0 6px;
-  line-height: 1.5;
-}
-
-.risk-summary-body {
-  font-size: 0.8rem;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.risk-comparison-card {
+.tranche-card {
   background: #f8fafc;
-  border-radius: 10px;
-  padding: 14px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.risk-comparison-icon {
-  width: 36px;
-  height: 36px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  background: rgba(30,136,229,0.1);
-  color: #1e88e5;
+  padding: 10px;
+}
+
+.tranche-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
 }
 
-.risk-comparison-label {
-  font-size: 0.74rem;
-  color: #64748b;
-  margin: 0;
+.tranche-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
 }
 
-.risk-comparison-pct {
-  font-size: 1.6rem;
+.tranche-weight {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #3b82f6;
+  background: #eff6ff;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.tranche-value {
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #0d1b2e;
-  margin: 0;
+  color: #0f172a;
 }
 
-.risk-comparison-sub {
-  font-size: 0.74rem;
+.tranche-unit {
+  font-size: 0.75rem;
+  font-weight: 500;
   color: #94a3b8;
-  margin: 0;
 }
 
-/* Insights */
-.key-insights-card {}
+.tranche-desc {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin: 3px 0 0;
+}
 
-.insights-grid {
+.momentum-metrics-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
 
-.insight-card {
+.m-metric-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.m-metric-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.m-metric-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 2px 0;
+}
+
+.m-metric-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.m-metric-note {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+/* =====================================================
+   Advisory Actions List in Analysis
+   ===================================================== */
+.analysis-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.analysis-action-item {
   background: #f8fafc;
-  border-radius: 10px;
-  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #1e88e5;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.action-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.action-priority-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.action-category-tag {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.action-item-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.action-item-rationale {
+  font-size: 0.78rem;
+  color: #334155;
+  margin: 0 0 4px;
+  line-height: 1.45;
+}
+
+.action-item-note {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* Unmeasured factors grid */
+.unmeasured-grid {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.insight-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
+.unmeasured-item {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 6px;
+  padding: 8px 10px;
 }
 
-.insight-text {
-  font-size: 0.8rem;
-  color: #475569;
-  line-height: 1.5;
-  margin: 0;
+.disclaimer-mini-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
 }
 
-/* Next Step */
-.next-step-card {}
-
-.next-step-inner {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.next-step-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 11px;
-  background: rgba(30,136,229,0.1);
-  color: #1e88e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.next-step-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #0d1b2e;
-  margin: 0;
-}
-
-.next-step-sub {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin: 3px 0 0;
-}
-
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .analysis-row-top,
   .analysis-row-mid,
   .analysis-row-bottom {
     grid-template-columns: 1fr;
   }
-  .insights-grid {
+  .score-comparison-grid,
+  .treeshap-grid,
+  .tranches-grid,
+  .momentum-metrics-row {
     grid-template-columns: 1fr;
   }
 }

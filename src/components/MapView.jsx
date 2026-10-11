@@ -65,6 +65,7 @@ export default function MapView({ data }) {
           />
           {geoData && (
             <GeoJSON
+              key={data.length ? `geo-loaded-${data.length}` : "geo-loading"}
               data={geoData}
               style={styleFeature}
               onEachFeature={(feature, layer) => {
@@ -82,10 +83,62 @@ export default function MapView({ data }) {
                     <div class="tooltip-row"><span>Rainfall</span><strong>${w?.rainfall || 0} mm</strong></div>
                     <div class="tooltip-row"><span>Elevation</span><strong>${w?.elevation || "N/A"} m</strong></div>
                     <div class="tooltip-row"><span>Water Dist.</span><strong>${w?.water_distance || "N/A"} km</strong></div>
-                    <div class="tooltip-click">Click to analyse this ward →</div>
+                    <div class="tooltip-click">Click to view ward actions →</div>
                   </div>`,
                   { sticky: true, direction: "top", opacity: 1 }
                 );
+
+                // Leaflet click popup with dual independent navigation actions
+                const popupContent = document.createElement("div");
+                popupContent.className = "fs-map-popup";
+                popupContent.innerHTML = `
+                  <div class="popup-header">
+                    <div class="popup-title">
+                      <span class="popup-emoji">${getRiskEmoji(w?.level || "UNKNOWN")}</span>
+                      <strong>${w?.ward_name || "Ward " + wardNo}</strong>
+                    </div>
+                    <span class="fs-badge fs-badge--${(w?.level || "unknown").toLowerCase()}">${w?.level || "UNKNOWN"}</span>
+                  </div>
+                  <div class="popup-body">
+                    <div class="popup-row"><span>Risk Score</span><strong>${w ? Math.round(w.score) : "N/A"} / 200</strong></div>
+                    <div class="popup-row"><span>Rainfall</span><strong>${w?.rainfall || 0} mm</strong></div>
+                    <div class="popup-row"><span>Elevation</span><strong>${w?.elevation || "N/A"} m</strong></div>
+                    <div class="popup-row"><span>Water Distance</span><strong>${w?.water_distance || "N/A"} km</strong></div>
+                    ${w?.flood_momentum ? `<div class="popup-row"><span>Momentum</span><strong style="color: #1e88e5;">${w.flood_momentum.momentum_multiplier}x (${w.flood_momentum.momentum_level})</strong></div>` : ""}
+                  </div>
+                  <div class="popup-actions">
+                    <button class="popup-btn popup-btn-analysis" id="btn-analysis-${wardNo}">
+                      View Analysis →
+                    </button>
+                    <button class="popup-btn popup-btn-momentum" id="btn-momentum-${wardNo}">
+                      Rainfall History & Momentum →
+                    </button>
+                  </div>
+                `;
+
+                const btnAnalysis = popupContent.querySelector(`#btn-analysis-${wardNo}`);
+                if (btnAnalysis) {
+                  btnAnalysis.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (w) localStorage.setItem("selectedWard", JSON.stringify(w));
+                    navigate("/analysis");
+                  });
+                }
+
+                const btnMomentum = popupContent.querySelector(`#btn-momentum-${wardNo}`);
+                if (btnMomentum) {
+                  btnMomentum.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (w) localStorage.setItem("selectedWard", JSON.stringify(w));
+                    navigate(`/rainfall-history/${wardNo}`);
+                  });
+                }
+
+                layer.bindPopup(popupContent, {
+                  maxWidth: 290,
+                  minWidth: 260,
+                  className: "fs-leaflet-popup",
+                });
 
                 layer.on({
                   mouseover: (e) => {
@@ -98,7 +151,6 @@ export default function MapView({ data }) {
                     if (!w) return;
                     layer.setStyle({ weight: 3, color: "#111827", fillOpacity: 1 });
                     localStorage.setItem("selectedWard", JSON.stringify(w));
-                    navigate("/analysis");
                   },
                 });
               }}

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Bell, AlertTriangle, Shield, CheckCircle, Clock, MapPin,
-  CloudRain, RefreshCw, Volume2, PhoneCall, Radio, Siren,
+  Bell, AlertTriangle, CheckCircle, Clock, MapPin, Shield,
+  CloudRain, Volume2, PhoneCall, Radio, Siren,
   ChevronRight, Users, Activity,
 } from "lucide-react";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import { getRiskData } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Alerts.css";
 
 function getAlertLevel(score) {
-  if (score > 150) return { label: "CRITICAL", color: "#b91c1c", bg: "#fef2f2", icon: <Siren size={14} /> };
-  if (score > 100) return { label: "HIGH", color: "#ef4444", bg: "#fef2f2", icon: <AlertTriangle size={14} /> };
-  if (score > 60) return { label: "MODERATE", color: "#f97316", bg: "#fff7ed", icon: <AlertTriangle size={14} /> };
+  if (score >= 120) return { label: "HIGH", color: "#ef4444", bg: "#fef2f2", icon: <AlertTriangle size={14} /> };
+  if (score >= 80) return { label: "MEDIUM", color: "#f97316", bg: "#fff7ed", icon: <AlertTriangle size={14} /> };
   return { label: "LOW", color: "#22c55e", bg: "#f0fdf4", icon: <CheckCircle size={14} /> };
 }
 
@@ -23,41 +23,58 @@ function getTimeSince(minutes) {
 
 export default function Alerts() {
   const navigate = useNavigate();
-  const [allWards, setAllWards] = useState([]);
+  const [allWards, setAllWards] = useState(() => {
+    try {
+      const stored = localStorage.getItem("riskData");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [filter, setFilter] = useState("ALL");
   const [acknowledgedIds, setAcknowledgedIds] = useState(new Set());
-  const [now] = useState(new Date());
+  const [now] = useState(() => new Date());
 
   useEffect(() => {
-    const stored = localStorage.getItem("riskData");
-    if (stored) setAllWards(JSON.parse(stored));
+    let active = true;
+    getRiskData()
+      .then((data) => {
+        if (!active || !Array.isArray(data)) return;
+        setAllWards(data);
+        localStorage.setItem("riskData", JSON.stringify(data));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const rainfall = allWards[0]?.rainfall ?? 0;
+  const rainfall = allWards.length
+    ? Math.round(allWards.reduce((s, w) => s + (w.rainfall || 0), 0) / allWards.length)
+    : 0;
   const highRisk = allWards.filter((w) => w.level === "HIGH");
   const medRisk = allWards.filter((w) => w.level === "MEDIUM");
-  const lowRisk = allWards.filter((w) => w.level === "LOW");
 
-  // Build alerts from ward data
+  // Build alerts from ward data with deterministic timestamp offsets
   const allAlerts = [
-    ...highRisk.map((w, i) => ({
+    ...highRisk.map((w) => ({
       id: `H-${w.ward_no}`,
       wardNo: w.ward_no,
       wardName: w.ward_name,
       level: "HIGH",
       score: w.score,
       message: w.reason || `High flood risk detected. Rainfall: ${w.rainfall} mm, Elevation: ${w.elevation} m`,
-      minutesAgo: Math.floor(Math.random() * 15 + 2),
+      minutesAgo: ((Number(w.ward_no) * 7) % 15) + 2,
       type: "FLOOD_RISK",
     })),
-    ...medRisk.slice(0, 5).map((w, i) => ({
+    ...medRisk.slice(0, 5).map((w) => ({
       id: `M-${w.ward_no}`,
       wardNo: w.ward_no,
       wardName: w.ward_name,
       level: "MEDIUM",
       score: w.score,
       message: `Moderate risk. Monitor water levels. Rainfall: ${w.rainfall} mm`,
-      minutesAgo: Math.floor(Math.random() * 30 + 10),
+      minutesAgo: ((Number(w.ward_no) * 11) % 25) + 10,
       type: "WATCH",
     })),
     {
@@ -90,7 +107,7 @@ export default function Alerts() {
 
   return (
     <div className="fs-page-layout">
-      <Sidebar />
+      <Navbar />
       <div className="fs-page-main">
 
         {/* HEADER */}
@@ -136,9 +153,9 @@ export default function Alerts() {
           <div className="fs-kpi-card">
             <div className="fs-kpi-icon orange"><Activity size={20} /></div>
             <div className="fs-kpi-body">
-              <div className="fs-kpi-label">Critical Zones</div>
-              <div className="fs-kpi-value orange">{allWards.filter((w) => w.score > 150).length}</div>
-              <div className="fs-kpi-sub">Score above 150</div>
+              <div className="fs-kpi-label">High Risk Zones</div>
+              <div className="fs-kpi-value orange">{allWards.filter((w) => w.level === "HIGH").length}</div>
+              <div className="fs-kpi-sub">Score 120 or above</div>
             </div>
           </div>
           <div className="fs-kpi-card">

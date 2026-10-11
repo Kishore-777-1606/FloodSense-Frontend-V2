@@ -1,16 +1,20 @@
 /* =====================================================
-   Dashboard — specific layout styles
+   Dashboard — Specific Layout Styles (Expanded Viewport)
    ===================================================== */
 
 .dashboard-exec-summary {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   background: #fff7ed;
   border-left: 4px solid #f97316;
-  border-bottom: 1px solid rgba(249,115,22,0.15);
-  padding: 12px 24px;
+  border-bottom: 1px solid rgba(249, 115, 22, 0.15);
+  padding: 14px 32px;
   flex-wrap: wrap;
+  max-width: var(--fs-max-width, 1720px);
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .exec-icon {
@@ -23,7 +27,7 @@
   font-size: 0.84rem;
   color: #78350f;
   line-height: 1.5;
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .exec-action-btn {
@@ -31,31 +35,36 @@
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 7px 14px;
+  padding: 7px 15px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.15s;
   font-family: 'Inter', sans-serif;
 }
 
 .exec-action-btn:hover {
   background: #ea6c04;
+  transform: translateY(-1px);
 }
 
 .dashboard-map-section {
   display: flex;
-  gap: 18px;
-  padding: 18px 24px 20px;
+  gap: 24px;
+  padding: 22px 32px 28px;
   flex: 1;
+  max-width: var(--fs-max-width, 1720px);
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .dashboard-map-col {
-  flex: 2.2;
+  flex: 2.3;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -71,13 +80,29 @@
 }
 
 .dashboard-panel-col {
-  flex: 1;
-  min-width: 240px;
+  flex: 1.1;
+  min-width: 320px;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-map-section {
+    gap: 18px;
+    padding: 18px 20px 24px;
+  }
+  .dashboard-exec-summary {
+    padding: 12px 20px;
+  }
 }
 
 @media (max-width: 900px) {
   .dashboard-map-section {
     flex-direction: column;
     padding: 14px 16px 20px;
+  }
+  .dashboard-panel-col {
+    min-width: 100%;
+  }
+  .dashboard-exec-summary {
+    padding: 12px 16px;
   }
 }

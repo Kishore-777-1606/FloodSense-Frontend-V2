@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -44,7 +44,7 @@ function FitBounds({ geojsonData }) {
   return null;
 }
 
-export default function WardMiniMap({ wardNo, wardName }) {
+export default function WardMiniMap({ wardNo }) {
   const [wardFeature, setWardFeature] = useState(null);
   const [center, setCenter] = useState([13.0827, 80.2707]);
   const [loading, setLoading] = useState(true);
@@ -52,9 +52,7 @@ export default function WardMiniMap({ wardNo, wardName }) {
 
   useEffect(() => {
     if (!wardNo) return;
-
-    setLoading(true);
-    setError(null);
+    let active = true;
 
     fetch("/wards.geojson")
       .then((res) => {
@@ -91,9 +89,13 @@ export default function WardMiniMap({ wardNo, wardName }) {
         setLoading(false);
       })
       .catch((err) => {
+        if (!active) return;
         setError(err.message);
         setLoading(false);
       });
+    return () => {
+      active = false;
+    };
   }, [wardNo]);
 
   const wardGeoJSON = wardFeature

@@ -1,14 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FileText, Download, BarChart2, AlertTriangle, Shield, CloudRain,
-  MapPin, TrendingUp, Clock, CheckCircle, Filter, ChevronDown, Printer,
+  FileText, Download, BarChart2, AlertTriangle, CloudRain,
+  MapPin, TrendingUp, Clock, Filter, ChevronDown,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import { getRiskData } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Reports.css";
 
@@ -16,18 +17,35 @@ const PIE_COLORS = ["#ef4444", "#f97316", "#22c55e"];
 
 export default function Reports() {
   const navigate = useNavigate();
-  const [allWards, setAllWards] = useState([]);
+  const [allWards, setAllWards] = useState(() => {
+    try {
+      const stored = localStorage.getItem("riskData");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [sortBy, setSortBy] = useState("score");
   const [filterLevel, setFilterLevel] = useState("ALL");
   const [showFilter, setShowFilter] = useState(false);
-  const printRef = useRef(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("riskData");
-    if (stored) setAllWards(JSON.parse(stored));
+    let active = true;
+    getRiskData()
+      .then((data) => {
+        if (!active || !Array.isArray(data)) return;
+        setAllWards(data);
+        localStorage.setItem("riskData", JSON.stringify(data));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const rainfall = allWards[0]?.rainfall ?? 0;
+  const rainfall = allWards.length
+    ? Math.round(allWards.reduce((s, w) => s + (w.rainfall || 0), 0) / allWards.length)
+    : 0;
   const now = new Date();
   const formatDate = (d) => d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
   const formatTime = (d) => d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true });
@@ -125,7 +143,7 @@ export default function Reports() {
 
   return (
     <div className="fs-page-layout">
-      <Sidebar />
+      <Navbar />
       <div className="fs-page-main">
 
         {/* HEADER */}

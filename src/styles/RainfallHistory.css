@@ -1,0 +1,750 @@
+/* ==========================================================================
+   FloodSense — Rainfall History & Flood Momentum Page Styles
+   Reuses FloodSense shared design tokens and maintains visual harmony.
+   ========================================================================== */
+
+/* Page container (Expanded Viewport) */
+.rf-page-content {
+  padding: 22px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: var(--fs-max-width, 1720px);
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Section A: Ward Selector & Overview Bar
+   ========================================================================== */
+.rf-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  padding: 16px 20px;
+  box-shadow: var(--fs-card-shadow);
+}
+
+.rf-selector-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.rf-selector-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fs-muted);
+  white-space: nowrap;
+}
+
+.rf-search-box {
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+}
+
+.rf-search-input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border-radius: 9px;
+  border: 1px solid var(--fs-border);
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--fs-text);
+  background: #f8fafc;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.rf-search-input:focus {
+  border-color: var(--fs-blue);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.12);
+}
+
+.rf-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--fs-muted);
+  pointer-events: none;
+}
+
+.rf-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid var(--fs-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(13, 27, 46, 0.12);
+  z-index: 200;
+  padding: 6px;
+}
+
+.rf-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.12s;
+  color: var(--fs-text);
+}
+
+.rf-dropdown-item:hover {
+  background: #f1f5f9;
+}
+
+.rf-dropdown-item.active {
+  background: var(--fs-blue-light);
+  color: var(--fs-blue-dark);
+  font-weight: 600;
+}
+
+.rf-dropdown-empty {
+  padding: 14px;
+  font-size: 0.8rem;
+  color: var(--fs-muted);
+  text-align: center;
+}
+
+/* Ward Meta Chips in Bar */
+.rf-meta-chips {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rf-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--fs-muted);
+  padding: 6px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid var(--fs-border);
+}
+
+.rf-chip strong {
+  color: var(--fs-text);
+  font-weight: 600;
+}
+
+/* Ward Hero Card */
+.rf-ward-hero {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.rf-hero-ward-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.rf-hero-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--fs-blue-light);
+  color: var(--fs-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rf-hero-title h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--fs-navy);
+  margin: 0 0 4px;
+}
+
+.rf-hero-subtitle {
+  font-size: 0.76rem;
+  color: var(--fs-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rf-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 12px;
+  border-left: 1px solid var(--fs-border);
+}
+
+.rf-hero-stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fs-muted);
+}
+
+.rf-hero-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--fs-text);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.rf-hero-stat-value span.unit {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--fs-muted);
+}
+
+/* ==========================================================================
+   Section B: Rainfall Accumulation Windows (6 Cards)
+   ========================================================================== */
+.rf-windows-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.rf-window-card {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.rf-window-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.rf-window-card.highlight {
+  border-color: rgba(30, 136, 229, 0.4);
+  background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.rf-window-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rf-window-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+}
+
+.rf-window-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fs-blue);
+  background: var(--fs-blue-light);
+}
+
+.rf-window-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--fs-navy);
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.rf-window-value span.unit {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fs-muted);
+}
+
+.rf-window-role {
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--fs-muted);
+  min-height: 34px;
+}
+
+.rf-window-bar-track {
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.rf-window-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--fs-blue);
+  transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   Section C: Historical Time-Series Chart
+   ========================================================================== */
+.rf-chart-card {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 22px 24px;
+}
+
+.rf-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rf-chart-title-block h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fs-navy);
+  margin: 0 0 4px;
+}
+
+.rf-chart-title-block p {
+  font-size: 0.78rem;
+  color: var(--fs-muted);
+  margin: 0;
+}
+
+.rf-chart-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rf-chart-container {
+  width: 100%;
+  height: 290px;
+  margin-top: 8px;
+}
+
+.rf-chart-tooltip {
+  background: rgba(13, 27, 46, 0.95);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rf-chart-tooltip-time {
+  color: #94a3b8;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.rf-chart-tooltip-val {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 2px;
+}
+
+.rf-chart-tooltip-src {
+  font-size: 0.68rem;
+  color: #cbd5e1;
+}
+
+.rf-chart-footnote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.72rem;
+  color: var(--fs-muted);
+}
+
+/* ==========================================================================
+   Section D: Flood Momentum Analysis
+   ========================================================================== */
+.rf-momentum-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.rf-momentum-metrics-card {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rf-momentum-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.rf-momentum-kpi {
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid var(--fs-border);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rf-momentum-kpi-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fs-muted);
+}
+
+.rf-momentum-kpi-value {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--fs-navy);
+}
+
+.rf-momentum-kpi-sub {
+  font-size: 0.7rem;
+  color: var(--fs-muted);
+}
+
+/* Weights breakdown */
+.rf-weights-box {
+  background: #f0f7ff;
+  border: 1px solid rgba(30, 136, 229, 0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rf-weights-header {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--fs-blue-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rf-weights-items {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rf-weight-pill {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(30, 136, 229, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.74rem;
+  color: var(--fs-text);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rf-weight-pill strong {
+  font-size: 0.95rem;
+  color: var(--fs-blue);
+  font-weight: 800;
+}
+
+/* Momentum Pipeline & Formulas Card */
+.rf-momentum-pipeline-card {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rf-pipeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rf-pipeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  background: #f8fafc;
+  border: 1px solid var(--fs-border);
+}
+
+.rf-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--fs-navy);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rf-step-content {
+  flex: 1;
+}
+
+.rf-step-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--fs-navy);
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rf-step-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--fs-blue);
+}
+
+.rf-step-desc {
+  font-size: 0.72rem;
+  color: var(--fs-muted);
+  line-height: 1.35;
+}
+
+.rf-formula-box {
+  background: #0d1b2e;
+  border-radius: 9px;
+  padding: 12px 16px;
+  color: #e2e8f0;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.rf-formula-line {
+  color: #93c5fd;
+}
+
+.rf-formula-note {
+  font-size: 0.72rem;
+  color: var(--fs-muted);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   Section E: Historical Summaries Table & Cards
+   ========================================================================== */
+.rf-history-card {
+  background: #ffffff;
+  border-radius: var(--fs-card-radius);
+  border: 1px solid var(--fs-border);
+  box-shadow: var(--fs-card-shadow);
+  padding: 22px 24px;
+}
+
+.rf-history-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.rf-history-period-card {
+  background: #f8fafc;
+  border: 1px solid var(--fs-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.rf-history-period-card:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.rf-period-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fs-muted);
+}
+
+.rf-period-total {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--fs-navy);
+}
+
+.rf-period-total span.unit {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fs-muted);
+}
+
+.rf-period-sub-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 6px;
+  border-top: 1px solid var(--fs-border);
+  font-size: 0.72rem;
+  color: var(--fs-muted);
+}
+
+.rf-period-sub-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rf-period-sub-row strong {
+  color: var(--fs-text);
+  font-weight: 600;
+}
+
+/* Spinner helper */
+.spin {
+  animation: rf-spin 0.8s linear infinite;
+}
+
+@keyframes rf-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1360px) {
+  .rf-windows-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .rf-windows-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .rf-ward-hero {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rf-history-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .rf-momentum-section {
+    grid-template-columns: 1fr;
+  }
+  .rf-ward-hero {
+    grid-template-columns: 1fr;
+  }
+  .rf-windows-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rf-history-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .rf-page-content {
+    padding: 14px 16px 28px;
+  }
+  .rf-windows-grid {
+    grid-template-columns: 1fr;
+  }
+  .rf-history-grid {
+    grid-template-columns: 1fr;
+  }
+  .rf-momentum-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .rf-control-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rf-search-box {
+    max-width: 100%;
+  }
+}

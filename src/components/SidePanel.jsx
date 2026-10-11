@@ -10,11 +10,13 @@ export default function SidePanel({ data }) {
   const high = data.filter((w) => w.level === "HIGH").length;
   const medium = data.filter((w) => w.level === "MEDIUM").length;
   const low = data.filter((w) => w.level === "LOW").length;
-  const rainfall = data[0]?.rainfall || 0;
+  const avgRainfall = data.length
+    ? Math.round(data.reduce((s, w) => s + (w.rainfall || 0), 0) / data.length)
+    : (data[0]?.rainfall || 0);
   const total = data.length;
 
   const topWards = [...data]
-    .filter((w) => w.level === "HIGH")
+    .filter((w) => w.level === "HIGH" || w.level === "MEDIUM")
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
 
@@ -59,8 +61,8 @@ export default function SidePanel({ data }) {
       <div className="panel-section panel-rainfall">
         <Droplets size={16} className="panel-section-icon" />
         <div>
-          <h4>Current Rainfall</h4>
-          <p className="rainfall">{rainfall} <span>mm</span></p>
+          <h4>Avg Rainfall</h4>
+          <p className="rainfall">{avgRainfall} <span>mm</span></p>
         </div>
       </div>
 
