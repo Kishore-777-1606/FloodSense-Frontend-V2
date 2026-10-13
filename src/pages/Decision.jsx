@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import Navbar from "../components/Navbar";
+import { useWard1Live } from "../context/Ward1LiveContext";
 import { getRiskData, getWardHistory } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Decision.css";
@@ -170,6 +171,7 @@ function formatEvidenceItem(key, val, evidence = {}) {
 
 export default function Decision() {
   const navigate = useNavigate();
+  const { telemetry: ward1Telemetry } = useWard1Live();
   const [allWards, setAllWards] = useState(() => {
     try {
       const storedData = localStorage.getItem("riskData");
@@ -237,6 +239,21 @@ export default function Decision() {
       isMounted = false;
     };
   }, [selectedWard?.ward_no]);
+
+  // Synchronize Ward 1 actions when new telemetry arrives if Ward 1 is active
+  useEffect(() => {
+    if (!ward1Telemetry || Number(selectedWard?.ward_no) !== 1) return;
+    let isMounted = true;
+    getWardHistory(1)
+      .then((data) => {
+        if (!isMounted || !data) return;
+        setSelectedWard((prev) => ({ ...prev, ...data }));
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [ward1Telemetry?.received_at_iso, selectedWard?.ward_no]);
 
   const totalWards = allWards.length;
   const highRisk = allWards.filter((w) => w.level === "HIGH");

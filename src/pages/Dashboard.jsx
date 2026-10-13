@@ -14,12 +14,14 @@ import Navbar from "../components/Navbar";
 import MapView from "../components/MapView";
 import SidePanel from "../components/SidePanel";
 import Footer from "../components/Footer";
+import { useWard1Live } from "../context/Ward1LiveContext";
 import { getRiskData } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { telemetry: ward1Telemetry } = useWard1Live();
   const [data, setData] = useState([]);
   const [rainfall, setRainfall] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -69,6 +71,36 @@ export default function Dashboard() {
       active = false;
     };
   }, []);
+
+  // Synchronize Ward 1 in data state whenever live telemetry updates
+  useEffect(() => {
+    if (!ward1Telemetry || !data.length) return;
+    const readings = ward1Telemetry.sensor_readings || {};
+    const uVal = readings.ultrasonic_telemetry?.value_cm;
+    const rfVal = readings.rainfall_sensor_present && readings.rainfall_mm != null
+      ? readings.rainfall_mm
+      : (uVal != null ? uVal : null);
+
+    if (rfVal == null && !ward1Telemetry.risk_assessment) return;
+
+    setData((prev) => {
+      const idx = prev.findIndex((w) => Number(w.ward_no) === 1);
+      if (idx === -1) return prev;
+      const currentW1 = prev[idx];
+      const updatedW1 = {
+        ...currentW1,
+        rainfall: rfVal != null ? rfVal : currentW1.rainfall,
+        rainfall_mm: rfVal != null ? rfVal : currentW1.rainfall_mm,
+        score: ward1Telemetry.risk_assessment?.score ?? currentW1.score,
+        level: ward1Telemetry.risk_assessment?.level ?? currentW1.level,
+        live_telemetry: readings,
+        live_ward_data: ward1Telemetry
+      };
+      const nextData = [...prev];
+      nextData[idx] = updatedW1;
+      return nextData;
+    });
+  }, [ward1Telemetry, data.length]);
 
   if (loading) {
     return (
@@ -210,6 +242,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
 
         {/* MAP + PANEL */}
         <div className="dashboard-map-section">

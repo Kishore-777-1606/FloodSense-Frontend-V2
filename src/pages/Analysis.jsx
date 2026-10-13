@@ -14,10 +14,13 @@ import {
   CheckCircle,
   Activity,
   Layers,
-  AlertCircle
+  AlertCircle,
+  Cpu,
 } from "lucide-react";
 import WardMiniMap from "../components/WardMiniMap";
 import Navbar from "../components/Navbar";
+import Ward1TelemetryChart from "../components/Ward1TelemetryChart";
+import { useWard1Live } from "../context/Ward1LiveContext";
 import { getWardHistory } from "../services/api";
 import "../styles/shared.css";
 import "../styles/Analysis.css";
@@ -48,6 +51,13 @@ function formatTimestamp() {
 
 export default function Analysis() {
   const navigate = useNavigate();
+  const {
+    telemetry: ward1Telemetry,
+    isStale: ward1Stale,
+    ageSeconds: ward1AgeSeconds,
+    formatServerTime,
+  } = useWard1Live();
+
   const [ward] = useState(() => {
     try {
       const stored = localStorage.getItem("selectedWard");
@@ -100,11 +110,26 @@ export default function Analysis() {
   }
 
   // Active data sources (prefer liveDetails, fallback to ward)
+  const isWard1 = Number(ward.ward_no) === 1;
+  const ward1LiveReading = isWard1 && (
+    (ward1Telemetry?.sensor_readings?.rainfall_sensor_present && ward1Telemetry?.sensor_readings?.rainfall_mm != null)
+      ? Number(ward1Telemetry.sensor_readings.rainfall_mm)
+      : (ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null
+          ? Number(ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm)
+          : null)
+  );
+
   const currentData = liveDetails || ward;
-  const riskLevel = currentData.level || ward.level || "LOW";
+  const riskLevel = (isWard1 && ward1Telemetry?.risk_assessment?.level)
+    ? ward1Telemetry.risk_assessment.level
+    : (currentData.level || ward.level || "LOW");
   const riskColor = getRiskColor(riskLevel);
-  const finalScore = Number(currentData.score ?? ward.score ?? 0);
-  const baseScore = Number(currentData.base_score ?? ward.base_score ?? (finalScore * 0.7));
+  const finalScore = (isWard1 && ward1Telemetry?.risk_assessment?.score != null)
+    ? Number(ward1Telemetry.risk_assessment.score)
+    : Number(currentData.score ?? ward.score ?? 0);
+  const baseScore = (isWard1 && ward1Telemetry?.risk_assessment?.score != null)
+    ? Number(currentData.base_score ?? ward1Telemetry.risk_assessment.score)
+    : Number(currentData.base_score ?? ward.base_score ?? (finalScore * 0.7));
 
   // Explainability structures
   const exp = currentData.explainability || ward.explainability || {};
@@ -119,7 +144,9 @@ export default function Analysis() {
   const waterPts = Number(featContribs.water_distance_points ?? 0);
 
   // Inputs
-  const inputRain = Number(currentData.rainfall_mm ?? currentData.rainfall ?? ward.rainfall ?? 0);
+  const inputRain = (isWard1 && ward1LiveReading != null)
+    ? ward1LiveReading
+    : Number(currentData.rainfall_mm ?? currentData.rainfall ?? ward.rainfall ?? 0);
   const inputElev = Number(currentData.elevation_m ?? currentData.elevation ?? ward.elevation ?? 6.7);
   const inputWater = Number(currentData.water_distance_km ?? currentData.water_distance ?? ward.water_distance ?? 5.0);
 
@@ -139,7 +166,9 @@ export default function Analysis() {
   const narrative = currentData.evidence_summary || exp.narrative_explanation || currentData.reason || "";
   const actionsList = currentData.action_support?.actions || [];
   const unmeasuredFactors = currentData.data_limitations?.unmeasured_factors || [
-    "Standing floodwater depth (no physical depth sensors or telemetry)",
+    Number(ward.ward_no) === 1 && ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null
+      ? `Ultrasonic surface distance active (${ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm.toFixed(1)} mm; physical depth/runoff uncoupled)`
+      : "Standing floodwater depth (no physical depth sensors or telemetry)",
     "Stormwater canal discharge velocity and pump throughput (no flow meters)",
     "In-situ soil moisture (saturation is a calculated rainfall proxy only)",
     "Localized drain blockages or road depression micro-topography"
@@ -164,15 +193,39 @@ export default function Analysis() {
             <p>Verified XGBoost TreeSHAP Attribution & Hydrological Momentum · {timestamp}</p>
           </div>
           <div className="fs-page-header-right">
-            <div className="fs-header-badge">
-              <CloudRain size={14} />
-              <span>Rainfall:</span>
-              <strong>{inputRain.toFixed(1)} mm</strong>
-            </div>
-            <div className="fs-header-badge">
-              <Clock size={14} />
-              <strong>{timestamp}</strong>
-            </div>
+            {Number(ward.ward_no) === 1 && ward1Telemetry ? (
+              <>
+                <div
+                  className="fs-header-badge"
+                  style={{
+                    background: ward1Stale ? "#fffbeb" : "#ecfdf5",
+                    borderColor: ward1Stale ? "#fde68a" : "#a7f3d0",
+                    color: ward1Stale ? "#92400e" : "#065f46",
+                  }}
+                >
+                  <Cpu size={14} />
+                  <span>ESP32 Telemetry:</span>
+                  <strong>{ward1Stale ? `STALE (${ward1AgeSeconds}s)` : "ACTIVE (5s)"}</strong>
+                </div>
+                <div className="fs-header-badge">
+                  <Clock size={14} />
+                  <span>Server Receipt:</span>
+                  <strong>{formatServerTime(ward1Telemetry.received_at_iso)}</strong>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="fs-header-badge">
+                  <CloudRain size={14} />
+                  <span>Rainfall:</span>
+                  <strong>{inputRain.toFixed(1)} mm</strong>
+                </div>
+                <div className="fs-header-badge">
+                  <Clock size={14} />
+                  <strong>{timestamp}</strong>
+                </div>
+              </>
+            )}
           </div>
         </header>
 
@@ -222,11 +275,82 @@ export default function Analysis() {
               </div>
 
               <div className="ward-details-list" style={{ marginTop: "14px" }}>
-                <DetailRow icon={<CloudRain size={16} />} label="Rainfall Scenario Input (Feature 0)" value={`${inputRain.toFixed(1)} mm`} />
+                <DetailRow icon={<CloudRain size={16} />} label={isWard1 ? "Live Telemetry Input (Feature 0)" : "Rainfall Scenario Input (Feature 0)"} value={`${inputRain.toFixed(1)} mm`} />
                 <DetailRow icon={<Mountain size={16} />} label="Centroid Elevation" value={`${inputElev.toFixed(1)} m`} />
                 <DetailRow icon={<Waves size={16} />} label="Distance to Water / Canal" value={`${inputWater.toFixed(2)} km`} />
                 <DetailRow icon={<Activity size={16} />} label="Primary Risk Driver" value={exp.primary_driver || "ACUTE_PRECIPITATION_BURST"} />
               </div>
+
+              {/* DEDICATED WARD 1 LIVE TELEMETRY STREAM PANEL */}
+              {Number(ward.ward_no) === 1 && (
+                <div className="analysis-ward1-telemetry-box">
+                  <div className="analysis-w1-header">
+                    <div className="analysis-w1-title">
+                      <Cpu size={15} style={{ color: "#0284c7" }} />
+                      <strong>Ward 1 Live Telemetry Stream</strong>
+                      <span className={`analysis-w1-badge ${ward1Stale ? "stale" : "active"}`}>
+                        <span className={`pulse-dot ${ward1Stale ? "warning" : "active"}`}></span>
+                        {ward1Stale ? `STALE (${ward1AgeSeconds}s ago)` : "ACTIVE STREAM (5s)"}
+                      </span>
+                    </div>
+                    <span className="analysis-w1-receipt">
+                      Server Receipt: {formatServerTime(ward1Telemetry?.received_at_iso)}
+                    </span>
+                  </div>
+
+                  <div className="analysis-w1-grid">
+                    <div className="analysis-w1-metric">
+                      <span className="w1-label">Temperature</span>
+                      <span className="w1-value">
+                        {ward1Telemetry?.sensor_readings?.temperature_c != null
+                          ? `${ward1Telemetry.sensor_readings.temperature_c.toFixed(1)} °C`
+                          : "--"}
+                      </span>
+                      <span className="w1-sub">DHT22 Ambient Microclimate</span>
+                    </div>
+
+                    <div className="analysis-w1-metric">
+                      <span className="w1-label">Relative Humidity</span>
+                      <span className="w1-value">
+                        {ward1Telemetry?.sensor_readings?.humidity_pct != null
+                          ? `${ward1Telemetry.sensor_readings.humidity_pct.toFixed(1)} %`
+                          : "--"}
+                      </span>
+                      <span className="w1-sub">DHT22 Ambient Vapor</span>
+                    </div>
+
+                    <div className="analysis-w1-metric highlight">
+                      <span className="w1-label">Ultrasonic Telemetry</span>
+                      <span className="w1-value">
+                        {ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null
+                          ? `${ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm.toFixed(1)} mm`
+                          : "--"}
+                      </span>
+                      <span className="w1-sub">JSN-SR04M-2 Sensor to Surface</span>
+                    </div>
+
+                    <div className="analysis-w1-metric">
+                      <span className="w1-label">Live Input (ESP32)</span>
+                      <span className="w1-value">
+                        {ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null
+                          ? `${ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm.toFixed(1)} mm`
+                          : (currentData?.rainfall != null ? `${Number(currentData.rainfall).toFixed(1)} mm` : "46.0 mm")}
+                      </span>
+                      <span className="w1-sub">Active Model Input (Feature 0)</span>
+                    </div>
+                  </div>
+
+                  <div className="analysis-w1-note">
+                    <Info size={13} style={{ flexShrink: 0, marginTop: "1px", color: "#0284c7" }} />
+                    <span>
+                      <strong>ESP32 Telemetry Note:</strong> The Ward 1 prediction uses the latest ESP32 telemetry numeric value ({ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null ? `${ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm.toFixed(1)} mm` : "46.0 mm"}) as model feature 0. Note that this ESP32 value is an ultrasonic distance reading (distance to channel/water surface) and not physical measured rainfall from a rain gauge.
+                    </span>
+                  </div>
+
+                  {/* Real-time Dynamic Telemetry Chart */}
+                  <Ward1TelemetryChart initialTab="distance" />
+                </div>
+              )}
             </div>
 
             <div className="fs-card ward-map-card">
@@ -257,7 +381,7 @@ export default function Analysis() {
                 <ShapFactorCard
                   icon={<CloudRain size={20} />}
                   iconBg="rain-icon-bg"
-                  feature="Rainfall Scenario (Model Feature 0)"
+                  feature={isWard1 ? "Live Telemetry Input (Model Feature 0)" : "Rainfall Scenario (Model Feature 0)"}
                   inputVal={`${inputRain.toFixed(1)} mm`}
                   points={rainPts}
                   desc={rainPts >= 0 ? "Elevates predicted risk score above baseline" : "Low rainfall attenuates risk score below baseline"}

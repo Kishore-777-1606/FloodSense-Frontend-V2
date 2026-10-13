@@ -29,6 +29,8 @@ import {
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Ward1TelemetryChart from "../components/Ward1TelemetryChart";
+import { useWard1Live } from "../context/Ward1LiveContext";
 import { getRiskData, getWardHistory } from "../services/api";
 import "../styles/shared.css";
 import "../styles/RainfallHistory.css";
@@ -62,6 +64,7 @@ function formatObsDate(isoStr) {
 export default function RainfallHistory() {
   const { wardNo: paramWardNo } = useParams();
   const navigate = useNavigate();
+  const { telemetry: ward1Telemetry } = useWard1Live();
 
   const [allWardsRisk, setAllWardsRisk] = useState([]);
   const [wardDetails, setWardDetails] = useState(null);
@@ -235,12 +238,27 @@ export default function RainfallHistory() {
     return Math.max(10, Math.ceil(max * 1.25));
   }, [chartData]);
 
-  const riskColor = getRiskColor(currentRiskMeta?.level || "LOW");
+  const isWard1 = Number(selectedWardNo) === 1;
+  const ward1LiveSensorValue = isWard1 && (
+    (ward1Telemetry?.sensor_readings?.rainfall_sensor_present && ward1Telemetry?.sensor_readings?.rainfall_mm != null)
+      ? Number(ward1Telemetry.sensor_readings.rainfall_mm)
+      : (ward1Telemetry?.sensor_readings?.ultrasonic_telemetry?.value_cm != null
+          ? Number(ward1Telemetry.sensor_readings.ultrasonic_telemetry.value_cm)
+          : null)
+  );
+
+  const riskColor = getRiskColor((isWard1 && ward1Telemetry?.risk_assessment?.level) ? ward1Telemetry.risk_assessment.level : (currentRiskMeta?.level || wardDetails?.level || "LOW"));
   const momentumColor = getRiskColor(momentum?.momentum_level || "LOW");
 
-  const baseScore = currentRiskMeta?.base_score ?? (wardDetails?.base_score || 0);
-  const finalScore = currentRiskMeta?.score ?? (wardDetails?.score || 0);
-  const riskLevel = currentRiskMeta?.level ?? (wardDetails?.level || "LOW");
+  const baseScore = (isWard1 && ward1Telemetry?.risk_assessment?.score != null)
+    ? Number(wardDetails?.base_score ?? ward1Telemetry.risk_assessment.score)
+    : (currentRiskMeta?.base_score ?? (wardDetails?.base_score || 0));
+  const finalScore = (isWard1 && ward1Telemetry?.risk_assessment?.score != null)
+    ? Number(ward1Telemetry.risk_assessment.score)
+    : (currentRiskMeta?.score ?? (wardDetails?.score || 0));
+  const riskLevel = (isWard1 && ward1Telemetry?.risk_assessment?.level)
+    ? ward1Telemetry.risk_assessment.level
+    : (currentRiskMeta?.level ?? (wardDetails?.level || "LOW"));
 
   return (
     <div className="fs-page-layout">
@@ -624,6 +642,15 @@ export default function RainfallHistory() {
           </div>
 
           {/* ==================================================================
+              SECTION C-LIVE: WARD 1 PHYSICAL ESP32 REAL-TIME SENSOR TREND
+              ================================================================== */}
+          {Number(selectedWardNo) === 1 && (
+            <div style={{ marginTop: "16px" }}>
+              <Ward1TelemetryChart initialTab="distance" />
+            </div>
+          )}
+
+          {/* ==================================================================
               SECTION D: FLOOD MOMENTUM & ANTECEDENT SATURATION ANALYSIS
               ================================================================== */}
           <div>
@@ -749,9 +776,15 @@ export default function RainfallHistory() {
                         <span className="rf-step-val">{Math.round(baseScore)} / 200</span>
                       </div>
                       <div className="rf-step-desc">
-                        Evaluated from instant rainfall ({currentRiskMeta?.rainfall ?? "0"} mm),
-                        elevation ({wardDetails?.elevation_m ?? "6.7"} m), and water distance (
-                        {wardDetails?.water_distance_km ?? "10.0"} km).
+                        {isWard1 ? (
+                          <>
+                            Evaluated from live ESP32 telemetry ({ward1LiveSensorValue != null ? ward1LiveSensorValue.toFixed(1) : (currentRiskMeta?.rainfall ?? "46.0")} mm; ultrasonic reading), elevation ({wardDetails?.elevation_m ?? "6.7"} m), and water distance ({wardDetails?.water_distance_km ?? "25.47"} km).
+                          </>
+                        ) : (
+                          <>
+                            Evaluated from instant rainfall ({currentRiskMeta?.rainfall ?? "0"} mm), elevation ({wardDetails?.elevation_m ?? "6.7"} m), and water distance ({wardDetails?.water_distance_km ?? "10.0"} km).
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

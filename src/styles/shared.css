@@ -489,7 +489,7 @@
   background: var(--fs-surface);
   font-family: 'Inter', sans-serif;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
 }
 

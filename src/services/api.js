@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env?.VITE_API_URL || "http://localhost:5000";
 const FALLBACK_API_BASE_URL = "https://floodsense-backend-working.onrender.com";
 
 /**
@@ -70,3 +70,22 @@ export async function getRainfallScenario(rainfall_mm, signal) {
     signal,
   });
 }
+
+/**
+ * Retrieves the latest live sensor telemetry record for Ward 1 (Thiruvottiyur)
+ * from the dedicated ESP32 edge deployment.
+ */
+export async function getWard1LiveData() {
+  return fetchWithFallback("/api/ward1/live-data");
+}
+
+/**
+ * Retrieves bounded chronological history of Ward 1 live telemetry records
+ * from MongoDB for real-time charting.
+ * @param {number} [limit=30]
+ */
+export async function getWard1History(limit = 30) {
+  return fetchWithFallback(`/api/ward1/history?limit=${encodeURIComponent(limit)}`);
+}
+
+
