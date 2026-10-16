@@ -151,7 +151,7 @@ export default function Navbar() {
             <div className="fs-nav-brand-sub">
               <span>Chennai GIS</span>
               <span className="fs-brand-sep">·</span>
-              <span className="fs-brand-pill">AI Platform</span>
+              <span className="fs-brand-pill">Flood Intelligence Platform</span>
             </div>
           </div>
         </div>
